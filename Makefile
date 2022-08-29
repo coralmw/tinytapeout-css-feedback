@@ -19,3 +19,6 @@ harden:
 	$(OPENLANE_IMAGE_NAME) \
 	/bin/bash -c "./flow.tcl -overwrite -design /work/src -run_path /work/runs -tag wokwi"
 
+solve:
+	cd src && python3 genexe.py
+	cd build && parallel --results {.}.log "/Applications/Racket\ v8.6/bin/racket" {} ::: *.rkt
