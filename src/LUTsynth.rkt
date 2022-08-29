@@ -1,4 +1,11 @@
-#lang rosette/safe
+#lang rosette
+
+;(require rosette/solver/smt/z3)
+; hash is not part of the safe subset of rosette
+;(current-solver (z3 #:options (hash ':parallel.enable 'true)))
+;(solver-options (current-solver))
+
+(current-bitwidth 10) ; 170 gates, need 8 bits
 
 (define (bufferC a) a)
 (define (notC a) (not a))
@@ -211,15 +218,25 @@
 
 (define maxGateIdx (length gates))
 
-(define-symbolic* gateindices integer? #:length 5)
+(define-symbolic* gateindices integer? #:length 15)
 
-(define result-map '(
-                     ((#f #f #f #t #f) (#t #f #f #f #f))
-                     ((#t #f #f #f #f) (#f #t #f #f #f))
-                     ((#t #t #f #f #f) (#f #f #t #f #f))
-                     ((#f #t #t #f #f) (#f #f #f #t #f))
-                     ((#f #f #t #t #f) (#f #f #f #f #t))
-                     ))
+(define x-corrections '(
+                        ((#f #f #t #t #f) (#f #f #f #f #t))
+                        ((#t #t #t #t #f) (#f #f #f #f #f))
+                        ;((#t #t #f #t #f) (#f #f #f #f #f))
+                        ;((#f #t #t #t #f) (#f #f #f #f #f))
+                        ;((#f #f #f #t #f) (#t #f #f #f #f))
+                        ;((#t #t #f #f #f) (#f #f #t #f #f))
+                        ;((#t #f #t #f #f) (#f #f #f #f #f))
+                        ;((#f #f #t #f #f) (#f #f #f #f #f))
+                        ;((#f #t #f #t #f) (#f #f #f #f #f))
+                        ;((#t #f #t #t #f) (#f #f #f #f #f))
+                        ;((#t #f #f #t #f) (#f #f #f #f #f))
+                        ;((#f #f #f #f #f) (#f #f #f #f #f))
+                        ;((#f #t #t #f #f) (#f #f #f #t #f))
+                        ;((#f #t #f #f #f) (#f #f #f #f #f))
+                        ;((#t #t #t #f #f) (#f #f #f #f #f))
+                        ((#t #f #f #f #f) (#f #t #f #f #f))))
 
 (solve (assert
         (andmap (lambda (inp-outp-pair)
@@ -228,7 +245,7 @@
                     (gate-idx-list-to-circ gateindices)
                     (first inp-outp-pair))
                    (second inp-outp-pair)))
-                result-map)))
+                x-corrections)))
 
 
 ;
