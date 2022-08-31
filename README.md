@@ -2,19 +2,11 @@
 
 Go to https://tinytapeout.com for instructions!
 
-# How to change the Wokwi project
+# 5 qubit CSS feedback decoder - in sillicon!
 
-Edit the [Makefile](Makefile) and change the WOKWI_PROJECT_ID to match your project.
+The [5 qubit code](https://en.wikipedia.org/wiki/Five-qubit_error_correcting_code) is the smallest possible code that protects a single logical qubit from all errors on the coding physical qubits. It uses a small number of ancilla - those are not protected, so this is not in itself a practical code.
 
-# What is this about?
-
-This repo is a template you can make a copy of for your own [ASIC](https://www.zerotoasiccourse.com/terminology/asic/) design using [Wokwi](https://wokwi.com/).
-
-When you edit the Makefile to choose a different ID, the [GitHub Action](.github/workflows/wokwi.yaml) will fetch the digital netlist of your design from Wokwi.
-
-The design gets wrapped in some extra logic that builds a 'scan chain'. This is a way to put lots of designs onto one chip and still have access to them all. You can see [all of the technical details here](https://github.com/mattvenn/scan_wrapper).
-
-After that, the action uses the open source ASIC tool called [OpenLane](https://www.zerotoasiccourse.com/terminology/openlane/) to build the files needed to fabricate an ASIC.
+It's probable that the decoding rate for full-strength codes will be a significant limitation; a content addressable memory with kilobit addressing is a challenging structure to build, even with 10's MHz cycle times. Practical decoders will be approximate, but as latency is a critical factor it's probable that dedicated semiprogrammable processing ASIC's will be needed.
 
 # What files get made?
 
