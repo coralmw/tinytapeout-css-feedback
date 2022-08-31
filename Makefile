@@ -1,4 +1,5 @@
-WOKWI_PROJECT_ID=339800239192932947 # empty wokwi project; used to ensure the project is unique
+WOKWI_PROJECT_ID=339800239192932947 
+# empty wokwi project; used to ensure the project is unique
 
 fetch:
 	# curl https://wokwi.com/api/projects/$(WOKWI_PROJECT_ID)/verilog > src/user_module_$(WOKWI_PROJECT_ID).v
