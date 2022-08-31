@@ -70,7 +70,7 @@ module CodeLUT(input CLK,  input RST,
 
 endmodule
 
-module user_module_coralmw_manual_verilog(
+module user_module_339800239192932947(
   input [7:0] io_in,
   output [7:0] io_out
 );
