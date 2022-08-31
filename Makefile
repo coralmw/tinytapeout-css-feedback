@@ -1,14 +1,11 @@
-WOKWI_PROJECT_ID=coralmw_manual_verilog
+# empty wokwi project; used to ensure the project is unique
+WOKWI_PROJECT_ID=339800239192932947
 
-# WOKWI_PROJECT_ID=334335179919196756
 
-# logic puzzle and muxes
-# 4 inverters 334348818476696146
-# the clock divider 334335179919196756
 fetch:
 	# curl https://wokwi.com/api/projects/$(WOKWI_PROJECT_ID)/verilog > src/user_module_$(WOKWI_PROJECT_ID).v
-	sed -e 's/USER_MODULE_ID/$(WOKWI_PROJECT_ID)/g' template/scan_wrapper.v > src/scan_wrapper_$(WOKWI_PROJECT_ID).v
-	sed -e 's/USER_MODULE_ID/$(WOKWI_PROJECT_ID)/g' template/config.tcl > src/config.tcl
+	sed -e 's/USER_MODULE_ID/$(strip $(WOKWI_PROJECT_ID))/g' template/scan_wrapper.v > src/scan_wrapper_$(WOKWI_PROJECT_ID).v
+	sed -e 's/USER_MODULE_ID/$(strip $(WOKWI_PROJECT_ID))/g' template/config.tcl > src/config.tcl
 	echo $(WOKWI_PROJECT_ID) > src/ID
 
 # needs PDK_ROOT and OPENLANE_ROOT, OPENLANE_IMAGE_NAME set from your environment
@@ -23,7 +20,7 @@ harden:
 	/bin/bash -c "./flow.tcl -overwrite -design /work/src -run_path /work/runs -tag wokwi"
 
 lint:
-	iverilog src/coralmw_manual_verilog.v src/minimal-code-LUT.v
+	iverilog src/user_module_339800239192932947.v
 
 test:
 	make TOPLEVEL=CodeLUT MODULE=src.testCodeLUT -f cocotb.mk sim
