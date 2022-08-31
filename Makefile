@@ -1,10 +1,11 @@
-WOKWI_PROJECT_ID=339800239192932947 
 # empty wokwi project; used to ensure the project is unique
+WOKWI_PROJECT_ID=339800239192932947
+
 
 fetch:
 	# curl https://wokwi.com/api/projects/$(WOKWI_PROJECT_ID)/verilog > src/user_module_$(WOKWI_PROJECT_ID).v
-	sed -e 's/USER_MODULE_ID/$(WOKWI_PROJECT_ID)/g' template/scan_wrapper.v > src/scan_wrapper_$(WOKWI_PROJECT_ID).v
-	sed -e 's/USER_MODULE_ID/$(WOKWI_PROJECT_ID)/g' template/config.tcl > src/config.tcl
+	sed -e 's/USER_MODULE_ID/$(strip $(WOKWI_PROJECT_ID))/g' template/scan_wrapper.v > src/scan_wrapper_$(WOKWI_PROJECT_ID).v
+	sed -e 's/USER_MODULE_ID/$(strip $(WOKWI_PROJECT_ID))/g' template/config.tcl > src/config.tcl
 	echo $(WOKWI_PROJECT_ID) > src/ID
 
 # needs PDK_ROOT and OPENLANE_ROOT, OPENLANE_IMAGE_NAME set from your environment
