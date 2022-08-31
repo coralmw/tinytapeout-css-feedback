@@ -1,5 +1,7 @@
 #lang rosette
 
+#lang rosette
+
 ;(require rosette/solver/smt/z3)
 ; hash is not part of the safe subset of rosette
 ;(current-solver (z3 #:options (hash ':parallel.enable 'true)))
@@ -8,7 +10,7 @@
 ;(require rosette/solver/smt/z3)
 ;(current-solver (z3 #:path "/path/to/z3"))
 
-(current-bitwidth 10) ; 170 gates, need 8 bits
+(current-bitwidth 12)
 
 (define (bufferC a) a)
 (define (notC a) (not a))
@@ -42,12 +44,14 @@
   (for*/list ([outidx indices] [inidx indices] [gatefn prim-single-arity])
       (gate gatefn `(,inidx) outidx)))
 
+
 (define possible-dual-indices
   (list
-   '(0 1) '(0 2) '(0 3) '(0 4)
-   '(1 2) '(1 3) '(1 4)
-   '(2 3) '(2 4)
-   '(3 4)
+   '(0 1) '(0 2) '(0 3) '(0 4) '(0 5)
+   '(1 2) '(1 3) '(1 4) '(1 5)
+   '(2 3) '(2 4) '(2 5)
+   '(3 4) '(3 5)
+   '(4 5)
    )
   )
 
@@ -72,78 +76,63 @@
 (define maxGateIdx (length gates))
 
 (define-symbolic* gateindices integer? #:length 20)
+(define no-corrections
+  (map (lambda (input) `(,input, '(#f #f #f #f #f)))
+         (cartesian-product '(#t #f) '(#t #f) '(#t #f) '(#t #f) '(#f) '(#f) )))
 
-(define x-corrections '(
-                        ((#f #f #t #t #f #f) (#f #f #f #f #t #f))
-                        ((#t #t #t #t #f #f) (#f #f #f #f #f #f))
-                        ((#t #t #f #t #f #f) (#f #f #f #f #f #f))
-                        ((#f #t #t #t #f #f) (#f #f #f #f #f #f))
-                        ((#f #f #f #t #f #f) (#t #f #f #f #f #f))
-                        ((#t #t #f #f #f #f) (#f #f #t #f #f #f))
-                        ((#t #f #t #f #f #f) (#f #f #f #f #f #f))
-                        ((#f #f #t #f #f #f) (#f #f #f #f #f #f))
-                        ;((#f #t #f #t #f #f) (#f #f #f #f #f #f))
-                        ;((#t #f #t #t #f #f) (#f #f #f #f #f #f))
-                        ;((#t #f #f #t #f #f) (#f #f #f #f #f #f))
-                        ;((#f #f #f #f #f #f) (#f #f #f #f #f #f))
-                        ;((#f #t #t #f #f #f) (#f #f #f #t #f #f))
-                        ;((#f #t #f #f #f #f) (#f #f #f #f #f #f))
-                        ;((#t #t #t #f #f #f) (#f #f #f #f #f #f))
-                        ((#t #f #f #f #f #f) (#f #t #f #f #f #f))))
 
-(define y-corrections '(((#f #f #t #t #f #f) (#f #f #f #f #f #f))
-                        ((#t #t #t #t #f #f) (#f #f #f #t #f #f))
-                        ((#t #t #f #t #f #f) (#f #t #f #f #f #f))
-                        ((#f #t #t #t #f #f) (#f #f #f #f #t #f))
-                        ((#f #f #f #t #f #f) (#f #f #f #f #f #f))
-                        ((#t #t #f #f #f #f) (#f #f #f #f #f #f))
-                        ((#t #f #t #f #f #f) (#f #f #f #f #f #f))
-                        ((#f #f #t #f #f #f) (#f #f #f #f #f #f))
-                        ((#f #t #f #t #f #f) (#f #f #f #f #f #f))
-                        ((#t #f #t #t #f #f) (#t #f #f #f #f #f))
-                        ((#t #f #f #t #f #f) (#f #f #f #f #f #f))
-                        ((#f #f #f #f #f #f) (#f #f #f #f #f #f))
-                        ((#f #t #t #f #f #f) (#f #f #f #f #f #f))
-                        ((#f #t #f #f #f #f) (#f #f #f #f #f #f))
-                        ((#t #t #t #f #f #f) (#f #f #t #f #f #f))
-                        ((#t #f #f #f #f #f) (#f #f #f #f #f #f))))
+(define result-map-xs '(
+                    ((#f #f #f #t #f #f) (#t #f #f #f #f #f))
+                    ((#t #f #f #f #f #f) (#f #t #f #f #f #f))
+                    ((#t #t #f #f #f #f) (#f #f #t #f #f #f))
+                    ((#f #t #t #f #f #f) (#f #f #f #t #f #f))
+                    ((#f #f #t #t #f #f) (#f #f #f #f #t #f))
+                    ))
 
-(define z-corrections '(((#f #f #t #t #f #f) (#f #f #f #f #f #f))
-                        ((#t #t #t #t #f #f) (#f #f #f #t #f #f))
-                        ((#t #t #f #t #f #f) (#f #t #f #f #f #f))
-                        ((#f #t #t #t #f #f) (#f #f #f #f #t #f))
-                        ((#f #f #f #t #f #f) (#f #f #f #f #f #f))
-                        ((#t #t #f #f #f #f) (#f #f #f #f #f #f))
-                        ((#t #f #t #f #f #f) (#f #f #f #f #f #f))
-                        ((#f #f #t #f #f #f) (#f #f #f #f #f #f))
-                        ((#f #t #f #t #f #f) (#f #f #f #f #f #f))
-                        ((#t #f #t #t #f #f) (#t #f #f #f #f #f))
-                        ((#t #f #f #t #f #f) (#f #f #f #f #f #f))
-                        ((#f #f #f #f #f #f) (#f #f #f #f #f #f))
-                        ((#f #t #t #f #f #f) (#f #f #f #f #f #f))
-                        ((#f #t #f #f #f #f) (#f #f #f #f #f #f))
-                        ((#t #t #t #f #f #f) (#f #f #t #f #f #f))
-                        ((#t #f #f #f #f #f) (#f #f #f #f #f #f))))
+(define result-map-ys '(
+                    ((#t #f #t #t #f #f) (#t #f #f #f #f #f))
+                    ((#t #t #f #t #f #f) (#f #t #f #f #f #f))
+                    ((#t #t #t #f #f #f) (#f #f #t #f #f #f))
+                    ((#t #t #t #t #f #f) (#f #f #f #t #f #f))
+                    ((#f #t #t #t #f #f) (#f #f #f #f #t #f))
+                    ))
+
+(define result-map-zs '(
+                    ((#t #f #t #f #f #f) (#t #f #f #f #f #f))
+                    ((#f #t #f #t #f #f) (#f #t #f #f #f #f))
+                    ((#f #f #t #f #f #f) (#f #f #t #f #f #f))
+                    ((#t #f #f #t #f #f) (#f #f #f #t #f #f))
+                    ((#f #t #f #f #f #f) (#f #f #f #f #t #f))
+                    ))
+
+(define x-corrections
+ (hash->list (make-hash (append no-corrections x-corrections))))
+
+(define y-corrections
+ (hash->list (make-hash (append no-corrections y-corrections))))
+
+(define z-corrections
+ (hash->list (make-hash (append no-corrections z-corrections))))
 
 (define result
-  (solve (assert
-        (andmap (lambda (inp-outp-pair)
-                  (eq?
-                   (eval-circ
-                    (gate-idx-list-to-circ gateindices)
-                    (first inp-outp-pair))
-                   (second inp-outp-pair)))
-                x-corrections))))
+ (solve (assert
+       (andmap (lambda (inp-outp-pair)
+                 (eq?
+                  (eval-circ
+                   (gate-idx-list-to-circ gateindices)
+                   (first inp-outp-pair))
+                  (second inp-outp-pair)))
+               x-corrections))))
 
 (define (symbolic-position sym)
-  (string->number (second (string-split (~s (car sym)) "$"))))
+ (string->number (second (string-split (~s (car sym)) "$"))))
 
 (define result-list (sort (hash->list (model result))
-                          <
-                          #:key symbolic-position))
+                         <
+                         #:key symbolic-position))
 
 (for-each (lambda (c-g-idx)
-            (writeln (list (car c-g-idx)
-                           (list-ref gates (cdr c-g-idx))
-                           )))
-          result-list)
+           (writeln (list (car c-g-idx)
+                          (list-ref gates (cdr c-g-idx))
+                          )))
+         result-list)
