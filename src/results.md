@@ -1,0 +1,31 @@
+# generated near-minimal combinatorial circuits for the error correction lookup.
+# run make synth to reproduce; _very_ slow (64core/h per circuit)
+ 
+==> 12-x.log <==
+(gateindices$0 (#<procedure:xorC> (1 3) 4))
+(gateindices$1 (#<procedure:orC> (2 3) 1))
+(gateindices$2 (#<procedure:xorC> (0 1) 1))
+(gateindices$3 (#<procedure:andC> (1 4) 4))
+(gateindices$4 (#<procedure:andC> (0 1) 1))
+(gateindices$5 (#<procedure:andC> (3 4) 0))
+(gateindices$6 (#<procedure:andC> (2 4) 3))
+(gateindices$7 (#<procedure:andC> (1 4) 2))
+(gateindices$8 (#<procedure:andC> (0 3) 4))
+(gateindices$9 (#<procedure:xorC> (0 4) 0))
+(gateindices$10 (#<procedure:xorC> (3 4) 3))
+(gateindices$11 (#<procedure:xorC> (1 2) 1))
+
+
+==> 12-y.log <== (or z, unsure)
+(gateindices$0 (#<procedure:andC> (1 2) 4))
+(gateindices$1 (#<procedure:andC> (1 3) 1))
+(gateindices$2 (#<procedure:andC> (0 1) 1))
+(gateindices$3 (#<procedure:andC> (0 2) 2))
+(gateindices$4 (#<procedure:andC> (2 3) 0))
+(gateindices$5 (#<procedure:xorC> (2 3) 2))
+(gateindices$6 (#<procedure:andC> (2 4) 2))
+(gateindices$7 (#<procedure:andC> (2 3) 4))
+(gateindices$8 (#<procedure:andC> (0 1) 3))
+(gateindices$9 (#<procedure:xorC> (0 3) 0))
+(gateindices$10 (#<procedure:xorC> (2 4) 2))
+(gateindices$11 (#<procedure:xorC> (1 3) 1))
