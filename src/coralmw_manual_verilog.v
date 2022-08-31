@@ -1,6 +1,4 @@
 
-module 
-
 module user_module_coralmw_manual_verilog(
   input [7:0] io_in,
   output [7:0] io_out
@@ -15,9 +13,9 @@ assign ancilla = io_in[6:3];
 
 wire [4:0] correction;
 wire [1:0] axis;
-assign io_out = {0, axis, correction};
+assign io_out = {1'b0, axis, correction};
 
-  codelut codeLUT(
+  CodeLUT codelut(
     CLK, RST,
     ancilla,
     correction,

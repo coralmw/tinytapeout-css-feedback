@@ -22,6 +22,9 @@ harden:
 	$(OPENLANE_IMAGE_NAME) \
 	/bin/bash -c "./flow.tcl -overwrite -design /work/src -run_path /work/runs -tag wokwi"
 
+lint:
+	iverilog src/coralmw_manual_verilog.v src/minimal-code-LUT.v
+
 solve:
 	cd src && python3 genexe.py
 	cd build && parallel --results {.}.log "/Applications/Racket\ v8.6/bin/racket" {} ::: *.rkt

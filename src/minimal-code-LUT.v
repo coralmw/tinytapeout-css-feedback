@@ -1,12 +1,16 @@
-module codeLUT(CLK, RST,
+module CodeLUT(input CLK,  input RST,
   input [3:0] ancilla,
   output [4:0] correction,
   output [1:0] axis);
   
   // 2 cycle in-to-out delay. fully pipelined.
-  input [3:0] ancilla_r;
+  reg [3:0] ancilla_r;
   reg [1:0] axis_r;
   reg [4:0] correction_r;
+  
+  assign correction = correction_r;
+  assign axis = axis_r;
+
   
   always @(posedge CLK) begin
     if (RST) begin
@@ -22,7 +26,7 @@ module codeLUT(CLK, RST,
           4'b1100: correction_r <= 5'b00100;
           4'b0110: correction_r <= 5'b00010;
           4'b0011: correction_r <= 5'b00001;
-          else:    correction_r <= 5'b00000;
+          default: correction_r <= 5'b00000;
         endcase
       end else if (axis_r == 1) begin // y
         case(ancilla_r)
@@ -31,7 +35,7 @@ module codeLUT(CLK, RST,
           4'b1110: correction_r <= 5'b00100;
           4'b1111: correction_r <= 5'b00010;
           4'b0111: correction_r <= 5'b00001;
-          else:    correction_r <= 5'b00000;
+          default: correction_r <= 5'b00000;
         endcase
       end else begin // z
         case(ancilla_r)
@@ -40,16 +44,13 @@ module codeLUT(CLK, RST,
           4'b1110: correction_r <= 5'b00100;
           4'b1111: correction_r <= 5'b00010;
           4'b0111: correction_r <= 5'b00001;
-          else:    correction_r <= 5'b00000;
+          default: correction_r <= 5'b00000;
         endcase
       end
-      correction <= correction_r;
-      axis <= axis_r;
       axis_r <= axis_r + 1; // loop over X, Y, Z 
     end
   end
 
 endmodule
-      
 
         
