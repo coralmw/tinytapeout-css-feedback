@@ -1,7 +1,7 @@
 # cocotb defines
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
-VERILOG_SOURCES += src/user_module_coralmw_manual_verilog.v
+VERILOG_SOURCES += src/user_module_339800239192932947.v
 TOPLEVEL = mkAdder
 MODULE = hardware.simulation.sim
 SIM_BUILD = build

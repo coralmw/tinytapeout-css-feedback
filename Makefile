@@ -18,7 +18,7 @@ harden:
 	/bin/bash -c "./flow.tcl -overwrite -design /work/src -run_path /work/runs -tag wokwi"
 
 lint:
-	iverilog src/coralmw_manual_verilog.v
+	iverilog src/user_module_339800239192932947.v
 
 test:
 	make TOPLEVEL=CodeLUT MODULE=src.testCodeLUT -f cocotb.mk sim
