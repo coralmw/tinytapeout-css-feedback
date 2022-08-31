@@ -1,26 +1,26 @@
-module CodeLUT(input CLK,  input RST,
+module CodeLUT_339800239192932947(input CLK,  input RST,
   input [3:0] ancilla,
   output [4:0] correction,
   output [1:0] axis);
-  
+
   // 3 cycle in-to-out delay. fully pipelined.
   reg [3:0] ancilla_r;
 
   reg [1:0] axis_r;
   reg [4:0] correction_r;
   reg [1:0] axis_calc;
-  
+
   assign correction = correction_r;
   assign axis = axis_r;
-  
+
   always @(posedge CLK) begin
     if (RST) begin
-      ancilla_r <= 0;   
+      ancilla_r <= 0;
     end else begin
-      ancilla_r <= ancilla;   
+      ancilla_r <= ancilla;
     end
   end
-  
+
   always @(posedge CLK) begin
     if (RST) begin
       axis_r <= 2'b00;
@@ -75,21 +75,21 @@ module user_module_339800239192932947(
   output [7:0] io_out
 );
 
-wire CLK; 
+wire CLK;
 assign CLK = io_in[0];
-wire RST; 
+wire RST;
 assign RST = io_in[1];
-wire [3:0] ancilla; 
+wire [3:0] ancilla;
 assign ancilla = io_in[6:3];
 
 wire [4:0] correction;
 wire [1:0] axis;
 assign io_out = {1'b0, axis, correction};
 
-  CodeLUT codelut(
+  CodeLUT_339800239192932947 codelut(
     CLK, RST,
     ancilla,
     correction,
     axis);
-    
+
 endmodule

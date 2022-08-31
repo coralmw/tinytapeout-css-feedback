@@ -23,7 +23,7 @@ lint:
 	iverilog src/user_module_339800239192932947.v
 
 test:
-	make TOPLEVEL=CodeLUT MODULE=src.testCodeLUT -f cocotb.mk sim
+	make TOPLEVEL=CodeLUT_339800239192932947 MODULE=src.testCodeLUT -f cocotb.mk sim
 
 solve:
 	cd src && python3 genexe.py
