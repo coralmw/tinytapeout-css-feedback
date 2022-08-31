@@ -45,6 +45,10 @@ jobs:
     # fetch the Verilog from Wokwi API
     - name: fetch Verilog
       run: make fetch
+      
+    # fetch the Verilog from Wokwi API
+    - name: run tests
+      run: make test
 
     # run the 'harden' rule in the Makefile to use OpenLane to build the GDS
     - name: make GDS

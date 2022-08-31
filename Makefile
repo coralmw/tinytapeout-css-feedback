@@ -25,6 +25,9 @@ harden:
 lint:
 	iverilog src/coralmw_manual_verilog.v src/minimal-code-LUT.v
 
+test:
+	make TOPLEVEL=CodeLUT MODULE=src.testCodeLUT -f cocotb.mk sim
+
 solve:
 	cd src && python3 genexe.py
 	cd build && parallel --results {.}.log "/Applications/Racket\ v8.6/bin/racket" {} ::: *.rkt
