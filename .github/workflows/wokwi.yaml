@@ -29,6 +29,13 @@ jobs:
       with:
         path: "requirements.txt"
 
+    - name: install apt deps
+      run: sudo apt update && sudo apt install -y iverilog
+
+    # run tests as soon as possible
+    - name: run tests
+      run: make test
+
     - uses: actions/checkout@v2
       with:
           repository: s-holst/GDS2WebGL
@@ -46,10 +53,6 @@ jobs:
     - name: fetch Verilog
       run: make fetch
       
-    # fetch the Verilog from Wokwi API
-    - name: run tests
-      run: make test
-
     # run the 'harden' rule in the Makefile to use OpenLane to build the GDS
     - name: make GDS
       run: make harden
