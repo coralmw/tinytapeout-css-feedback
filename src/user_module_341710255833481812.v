@@ -70,7 +70,7 @@ module CodeLUT_339800239192932947(input CLK,  input RST,
 
 endmodule
 
-module user_module_339800239192932947(
+module user_module_341710255833481812(
   input [7:0] io_in,
   output [7:0] io_out
 );
